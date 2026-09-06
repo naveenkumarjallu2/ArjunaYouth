@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>Arujuna Youth - Admin Dashboard</title>
+
+    <link
+        rel="stylesheet"
+        href="css/style.css"
+    >
+
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+</head>
+
+
+<body>
+
+<div class="admin-container">
+
+    <!-- LOGIN -->
+
+    <div id="loginSection" class="admin-card">
+
+        <h1>🔐 Admin Login</h1>
+
+        <p class="admin-subtitle">
+            Arujuna Youth - Ganesh Chanda Collection
+        </p>
+
+
+        <form id="loginForm">
+
+            <label>
+                Email
+            </label>
+
+            <input
+                type="email"
+                id="adminEmail"
+                placeholder="Admin email"
+                required
+            >
+
+
+            <label>
+                Password
+            </label>
+
+            <input
+                type="password"
+                id="adminPassword"
+                placeholder="Password"
+                required
+            >
+
+
+            <button
+                type="submit"
+                class="submitBtn"
+            >
+                Login
+            </button>
+
+        </form>
+
+
+        <div
+            id="loginMessage"
+            class="admin-message"
+        ></div>
+
+    </div>
+
+
+
+    <!-- DASHBOARD -->
+
+    <div
+        id="dashboardSection"
+        class="hidden"
+    >
+
+        <div class="admin-header">
+
+            <div>
+
+                <h1>
+                    🙏 Arujuna Youth
+                </h1>
+
+                <p>
+                    Ganesh Chanda Admin Dashboard
+                </p>
+
+            </div>
+
+
+            <button
+                id="logoutButton"
+                class="logoutBtn"
+            >
+                Logout
+            </button>
+
+        </div>
+
+
+
+        <!-- STATISTICS -->
+
+        <div class="stats-grid">
+
+            <div class="stat-card">
+
+                <h3>
+                    Total Collection
+                </h3>
+
+                <div
+                    id="totalCollection"
+                    class="stat-value"
+                >
+                    ₹0
+                </div>
+
+            </div>
+
+
+            <div class="stat-card">
+
+                <h3>
+                    Total Donors
+                </h3>
+
+                <div
+                    id="totalDonors"
+                    class="stat-value"
+                >
+                    0
+                </div>
+
+            </div>
+
+
+            <div class="stat-card">
+
+                <h3>
+                    Cash
+                </h3>
+
+                <div
+                    id="cashCollection"
+                    class="stat-value"
+                >
+                    ₹0
+                </div>
+
+            </div>
+
+
+            <div class="stat-card">
+
+                <h3>
+                    Online
+                </h3>
+
+                <div
+                    id="onlineCollection"
+                    class="stat-value"
+                >
+                    ₹0
+                </div>
+
+            </div>
+
+        </div>
+
+
+
+        <!-- ACTIONS -->
+
+        <div class="admin-actions">
+
+            <input
+                type="text"
+                id="searchInput"
+                placeholder="🔎 Search donor name or mobile..."
+            >
+
+
+            <button
+                id="refreshButton"
+                class="adminButton"
+            >
+                🔄 Refresh
+            </button>
+
+
+            <button
+                id="exportButton"
+                class="adminButton"
+            >
+                📥 Export CSV
+            </button>
+
+        </div>
+
+
+
+        <!-- DONATION TABLE -->
+
+        <div class="table-wrapper">
+
+            <table>
+
+                <thead>
+
+                    <tr>
+
+                        <th>Date</th>
+
+                        <th>Name</th>
+
+                        <th>Mobile</th>
+
+                        <th>WhatsApp</th>
+
+                        <th>Address</th>
+
+                        <th>Amount</th>
+
+                        <th>Payment</th>
+
+                        <th>Status</th>
+
+                        <th>Action</th>
+
+                    </tr>
+
+                </thead>
+
+
+                <tbody id="donationsTable">
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+
+        <div
+            id="dashboardMessage"
+            class="admin-message"
+        ></div>
+
+    </div>
+
+</div>
+
+
+<script src="js/supabase.js"></script>
+
+<script src="js/admin.js"></script>
+
+
+</body>
+
+</html>

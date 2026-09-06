@@ -1,0 +1,447 @@
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+    font-family:Arial, Helvetica, sans-serif;
+}
+
+body{
+    background:#fff7ed;
+    color:#333;
+}
+
+.hero{
+    position:relative;
+}
+
+.banner{
+    width:100%;
+    height:230px;
+    object-fit:cover;
+}
+
+.overlay{
+    position:absolute;
+    inset:0;
+    background:rgba(0,0,0,.45);
+    display:flex;
+    flex-direction:column;
+    justify-content:center;
+    align-items:center;
+    color:white;
+    text-align:center;
+}
+
+.overlay h1{
+    font-size:34px;
+}
+
+.overlay p{
+    margin-top:8px;
+    font-size:18px;
+}
+
+.container{
+    max-width:600px;
+    margin:20px auto;
+    background:white;
+    padding:25px;
+    border-radius:16px;
+    box-shadow:0 8px 20px rgba(0,0,0,.15);
+}
+
+h2,h3{
+    color:#d35400;
+    text-align:center;
+    margin-bottom:20px;
+}
+
+label{
+    display:block;
+    margin-top:15px;
+    margin-bottom:6px;
+    font-weight:bold;
+}
+
+input,textarea{
+    width:100%;
+    padding:12px;
+    border:1px solid #ccc;
+    border-radius:10px;
+    font-size:16px;
+}
+
+.toggle-row{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    margin-top:15px;
+}
+
+.radio{
+    display:flex;
+    gap:30px;
+    margin-top:12px;
+}
+
+.qr{
+    width:240px;
+    height:240px;
+    display:block;
+    margin:15px auto;
+    border-radius:15px;
+    border:4px solid orange;
+}
+
+.payButton{
+    display:block;
+    text-align:center;
+    background:#0f9d58;
+    color:white;
+    text-decoration:none;
+    padding:14px;
+    border-radius:10px;
+    font-size:18px;
+    font-weight:bold;
+    margin-top:15px;
+}
+
+.submitBtn{
+    width:100%;
+    background:#e67e22;
+    color:white;
+    border:none;
+    padding:15px;
+    border-radius:10px;
+    font-size:18px;
+    margin-top:25px;
+    cursor:pointer;
+}
+
+.submitBtn:hover{
+    background:#ca6b12;
+}
+
+.hidden{
+    display:none;
+}
+
+#message{
+    margin-top:20px;
+    text-align:center;
+    font-size:18px;
+    color:green;
+    font-weight:bold;
+}
+
+@media(max-width:600px){
+
+.overlay h1{
+    font-size:28px;
+}
+
+.container{
+    margin:10px;
+    padding:20px;
+}
+
+.qr{
+    width:200px;
+    height:200px;
+}
+
+}
+
+.success-container{
+    text-align:center;
+    margin-top:40px;
+}
+
+.success-icon{
+    width:80px;
+    height:80px;
+    background:#27ae60;
+    color:white;
+    border-radius:50%;
+    margin:0 auto 20px;
+
+    display:flex;
+    align-items:center;
+    justify-content:center;
+
+    font-size:50px;
+    font-weight:bold;
+}
+
+.success-container h1{
+    color:#27ae60;
+    margin-bottom:10px;
+}
+
+.donation-summary{
+    background:#fff7ed;
+    border-radius:12px;
+    padding:20px;
+    margin:25px 0;
+
+    text-align:left;
+}
+
+.donation-summary p{
+    margin:12px 0;
+}
+
+.thank-you{
+    margin:25px 0;
+}
+
+.thank-you h2{
+    margin-top:10px;
+}
+
+.homeButton{
+    display:block;
+
+    margin-top:15px;
+
+    padding:14px;
+
+    border-radius:10px;
+
+    background:#555;
+
+    color:white;
+
+    text-decoration:none;
+
+    font-weight:bold;
+}
+
+
+/* ==========================================
+   ADMIN DASHBOARD
+========================================== */
+
+.admin-container{
+    max-width:1400px;
+    margin:30px auto;
+    padding:20px;
+}
+
+.admin-card{
+    max-width:450px;
+    margin:60px auto;
+    background:white;
+    padding:30px;
+    border-radius:16px;
+    box-shadow:0 8px 25px rgba(0,0,0,.15);
+}
+
+.admin-card h1{
+    text-align:center;
+    color:#d35400;
+    margin-bottom:10px;
+}
+
+.admin-subtitle{
+    text-align:center;
+    margin-bottom:25px;
+    color:#777;
+}
+
+.admin-message{
+    text-align:center;
+    margin-top:15px;
+    font-weight:bold;
+}
+
+.admin-header{
+    background:white;
+    padding:20px;
+    border-radius:15px;
+
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+
+    box-shadow:0 5px 15px rgba(0,0,0,.1);
+
+    margin-bottom:20px;
+}
+
+.admin-header h1{
+    color:#d35400;
+}
+
+.admin-header p{
+    margin-top:5px;
+    color:#777;
+}
+
+.logoutBtn{
+    background:#c0392b;
+    color:white;
+    border:none;
+    padding:12px 20px;
+    border-radius:8px;
+    cursor:pointer;
+    font-weight:bold;
+}
+
+.stats-grid{
+    display:grid;
+    grid-template-columns:
+        repeat(4, 1fr);
+
+    gap:15px;
+
+    margin-bottom:20px;
+}
+
+.stat-card{
+    background:white;
+    padding:20px;
+    border-radius:15px;
+
+    box-shadow:
+        0 5px 15px rgba(0,0,0,.08);
+
+    text-align:center;
+}
+
+.stat-card h3{
+    font-size:16px;
+    margin-bottom:10px;
+}
+
+.stat-value{
+    font-size:28px;
+    font-weight:bold;
+    color:#d35400;
+}
+
+.admin-actions{
+    background:white;
+    padding:15px;
+    border-radius:15px;
+
+    display:flex;
+    gap:10px;
+
+    margin-bottom:20px;
+}
+
+.admin-actions input{
+    flex:1;
+}
+
+.adminButton{
+    border:none;
+    background:#e67e22;
+    color:white;
+
+    padding:12px 18px;
+
+    border-radius:8px;
+
+    cursor:pointer;
+
+    font-weight:bold;
+}
+
+.table-wrapper{
+    background:white;
+
+    border-radius:15px;
+
+    padding:10px;
+
+    overflow-x:auto;
+
+    box-shadow:
+        0 5px 15px rgba(0,0,0,.08);
+}
+
+table{
+    width:100%;
+    border-collapse:collapse;
+
+    min-width:1000px;
+}
+
+th{
+    background:#e67e22;
+    color:white;
+
+    padding:12px;
+
+    text-align:left;
+}
+
+td{
+    padding:12px;
+
+    border-bottom:
+        1px solid #eee;
+}
+
+tr:hover{
+    background:#fff7ed;
+}
+
+.deleteBtn{
+    background:#c0392b;
+    color:white;
+
+    border:none;
+
+    padding:7px 10px;
+
+    border-radius:6px;
+
+    cursor:pointer;
+}
+
+@media(max-width:800px){
+
+    .stats-grid{
+        grid-template-columns:
+            repeat(2, 1fr);
+    }
+
+    .admin-header{
+        flex-direction:column;
+        gap:15px;
+        text-align:center;
+    }
+
+    .admin-actions{
+        flex-direction:column;
+    }
+
+}
+
+@media(max-width:500px){
+
+    .stats-grid{
+        grid-template-columns:1fr;
+    }
+
+    .admin-container{
+        padding:10px;
+    }
+
+}
+
+.payment-info{
+    text-align:center;
+    margin:10px 0 20px;
+    color:#555;
+}
+
+.small-text{
+    text-align:center;
+    margin-top:15px;
+    font-size:13px;
+    color:#777;
+}

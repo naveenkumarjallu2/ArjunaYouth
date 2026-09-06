@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>Thank You - Arujuna Youth</title>
+
+    <link
+        rel="stylesheet"
+        href="css/style.css"
+    >
+
+</head>
+
+
+<body>
+
+    <div class="container success-container">
+
+        <div class="success-icon">
+            ✓
+        </div>
+
+        <h1>
+            Thank You!
+        </h1>
+
+        <p id="successMessage">
+            Your donation has been recorded.
+        </p>
+
+
+        <div class="donation-summary">
+
+            <p>
+                <strong>Donor:</strong>
+                <span id="donorName">-</span>
+            </p>
+
+            <p>
+                <strong>Amount:</strong>
+                ₹<span id="donationAmount">0</span>
+            </p>
+
+            <p>
+                <strong>Payment:</strong>
+                <span id="paymentType">-</span>
+            </p>
+
+            <p>
+                <strong>Status:</strong>
+                <span id="paymentStatus">-</span>
+            </p>
+
+        </div>
+
+
+        <div class="thank-you">
+
+            🙏
+
+            <h2>
+                Ganpati Bappa Morya!
+            </h2>
+
+            <p>
+                Thank you for supporting <strong>Arujuna Youth</strong>
+
+            </p><p>May Lord Ganesha bless you and your family with happiness and prosperity.</p>
+
+        </div>
+
+
+        <a
+            href="#"
+            id="whatsappButton"
+            class="payButton"
+            target="_blank"
+        >
+            Send Thank You on WhatsApp
+        </a>
+
+
+        <a
+            href="index.html"
+            class="homeButton"
+        >
+            Make Another Donation
+        </a>
+
+    </div>
+
+
+<script>
+
+document.addEventListener(
+    "DOMContentLoaded",
+    function () {
+
+        const savedDonation =
+            localStorage.getItem("lastDonation");
+
+
+        if (!savedDonation) {
+
+            document.getElementById(
+                "successMessage"
+            ).textContent =
+                "Thank you for supporting Arujuna Youth.";
+
+            return;
+        }
+
+
+        const donation =
+            JSON.parse(savedDonation);
+
+
+        const fullName =
+            `${donation.donor_name} ${donation.donor_surname}`;
+
+
+        document.getElementById(
+            "donorName"
+        ).textContent =
+            fullName;
+
+
+        document.getElementById(
+            "donationAmount"
+        ).textContent =
+            Number(donation.amount).toLocaleString(
+                "en-IN"
+            );
+
+
+        document.getElementById(
+            "paymentType"
+        ).textContent =
+            donation.payment_type;
+
+
+        document.getElementById(
+            "paymentStatus"
+        ).textContent =
+            donation.payment_status;
+
+
+        if (
+            donation.payment_type === "Online" &&
+            donation.payment_status === "Pending"
+        ) {
+
+            document.getElementById(
+                "successMessage"
+            ).textContent =
+                "Your donation details have been saved. Please complete the UPI payment.";
+
+        } else {
+
+            document.getElementById(
+                "successMessage"
+            ).textContent =
+                "Your donation has been successfully recorded. Thank you!";
+
+        }
+
+
+        /*
+         * WhatsApp message
+         */
+        const message =
+`🙏 Arujuna Youth - Ganesh Chanda Collection
+
+Thank you ${fullName} for your donation of ₹${Number(donation.amount).toLocaleString("en-IN")}.
+
+Payment Type: ${donation.payment_type}
+
+May Lord Ganesha bless you and your family with happiness and prosperity.
+
+🙏 Ganpati Bappa Morya!`;
+
+
+        /*
+         * If the donor said the mobile number
+         * is WhatsApp, use that number.
+         *
+         * Otherwise WhatsApp will open without
+         * a specific recipient.
+         */
+        let whatsappURL;
+
+
+        if (donation.is_whatsapp) {
+
+            whatsappURL =
+                `https://wa.me/91${donation.mobile}` +
+                `?text=${encodeURIComponent(message)}`;
+
+        } else {
+
+            whatsappURL =
+                `https://wa.me/?text=${encodeURIComponent(message)}`;
+
+        }
+
+
+        document.getElementById(
+            "whatsappButton"
+        ).href = whatsappURL;
+
+    }
+
+);
+
+</script>
+
+</body>
+
+</html>
