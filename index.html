@@ -1,98 +1,168 @@
+<!--index.html-->
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Arujuna Youth - Ganesh Chanda Collection</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Arujuna Youth - Ganesh Chanda Collection</title>
 
-  <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/style.css">
 
-  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-<script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
 </head>
 
 <body>
 
 <header class="hero">
 
-  <img src="assets/ganesh-banner.jpg" class="banner">
+    <img src="assets/back.jpg" class="banner">
 
-  <div class="overlay">
-    <h1>🙏 Arujuna Youth 🙏</h1>
-    <p>Ganesh Chanda Collection 2026</p>
-  </div>
+    <div class="overlay">
+
+        <div class="festival-chip">
+            ✨ Ganesh Chaturthi 2026 ✨
+        </div>
+
+        <h1>🙏 Arjuna Youth 🙏</h1>
+
+        <span class="hero-tag">
+            ✨Ganesh Chanda Collection ✨
+        </span>
+
+    </div>
 
 </header>
 
-<div class="container">
+<div class="container glass-card">
 
-<h2>Donor Details</h2>
+    <div class="title-area">
 
-<form id="donationForm">
+        <h2>Donation Details</h2>
 
-<label>Donor Name</label>
-<input type="text" id="name" required>
+    </div>
 
-<label>Donor Surname</label>
-<input type="text" id="surname" required>
+    <form id="donationForm">
 
-<label>Mobile Number</label>
-<input type="tel" id="mobile" maxlength="10" required>
+        <!-- Donor Name -->
+        <div class="input-box">
+            <span>👤</span>
+            <input
+                    type="text"
+                    id="name"
+                    placeholder="Enter Donor Name"
+                    required
+            >
+        </div>
 
-<div class="toggle-row">
+        <!-- Donor Surname -->
+        <div class="input-box">
+            <span>🪷</span>
+            <input
+                    type="text"
+                    id="surname"
+                    placeholder="Enter Surname"
+                    required
+            >
+        </div>
 
-<label>WhatsApp?</label>
+        <!-- Mobile -->
+        <div class="input-box">
+            <span>📞</span>
+            <input
+                    type="tel"
+                    id="mobile"
+                    maxlength="10"
+                    placeholder="Enter 10-digit Mobile Number"
+                    required
+            >
+        </div>
 
-<input type="checkbox" id="whatsapp">
+        <!-- Address -->
+        <div class="input-box textarea-box">
+            <span>📍</span>
+            <textarea
+                    id="address"
+                    rows="3"
+                    placeholder="Enter your Address"
+                    required
+            ></textarea>
+        </div>
 
-</div>
+        <!-- Amount -->
+        <div class="amount-card">
+            <label>Donation Amount</label>
 
-<label>Address</label>
-<textarea id="address" rows="3" required></textarea>
+            <div class="amount-input">
+                <span>₹</span>
+                <input
+                        type="number"
+                        id="amount"
+                        placeholder="Enter Donation Amount"
+                        required
+                >
+            </div>
+        </div>
 
-<label>Donation Amount (₹)</label>
-<input type="number" id="amount" required>
+        <!-- Payment Selection -->
 
-<label>Payment Type</label>
+        <label class="section-title">
+            Select Payment Method
+        </label>
 
-<div class="radio">
+        <div class="payment-selector">
 
-<label><input type="radio" name="payment" value="Cash" checked> Cash</label>
+            <label class="payment-card cash-card">
 
-<label><input type="radio" name="payment" value="Online"> Online</label>
+                <input type="radio" name="payment" value="Cash" checked>
 
-</div>
+                <div>
+                    💵 Cash
+                </div>
 
-<div id="onlineSection" class="hidden">
+            </label>
 
-    <h3>Online Payment</h3>
+            <label class="payment-card online-card">
 
-    <p class="payment-info">
-        Tap the button below to pay directly using your UPI app.
-    </p>
+                <input type="radio" name="payment" value="Online">
 
-    <button
-    type="button"
-    id="upiButton"
-    class="payButton"
->
-    💳 Pay Now
-</button>
+                <div>
+                    📱 UPI / Razorpay
+                </div>
 
-    <p class="small-text">
-        Google Pay, PhonePe, Paytm, BHIM and other UPI apps
-        may open automatically.
-    </p>
+            </label>
 
-</div>
+        </div>
 
-<button type="submit" class="submitBtn">
-Submit Donation
-</button>
+        <!-- Online Payment -->
 
-</form>
+        <div id="onlineSection" class="hidden">
 
-<div id="message"></div>
+            <div class="online-card-box">
+
+                <h3>Pay Securely with Razorpay</h3>
+
+                <p>
+                    Google Pay • PhonePe • Paytm • BHIM • UPI Apps
+                </p>
+
+                <button type="button" id="upiButton" class="payButton">
+                    💳 Pay Now
+                </button>
+
+            </div>
+
+        </div>
+
+        <!-- Cash Submit -->
+
+        <button type="submit" id="cashSubmitBtn" class="submitBtn">
+            Submit Cash Donation
+        </button>
+
+    </form>
+
+    <div id="message"></div>
 
 </div>
 

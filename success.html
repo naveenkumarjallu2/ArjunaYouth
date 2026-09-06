@@ -1,102 +1,122 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Thank You • Arujuna Youth</title>
 
-    <meta charset="UTF-8">
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 
-    <meta
-        name="viewport"
-        content="width=device-width, initial-scale=1.0"
-    >
-
-    <title>Thank You - Arujuna Youth</title>
-
-    <link
-        rel="stylesheet"
-        href="css/style.css"
-    >
-
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
 </head>
 
+<body class="success-body">
 
-<body>
+<div class="floating-bg"></div>
 
-    <div class="container success-container">
+<div class="success-wrapper">
 
-        <div class="success-icon">
-            ✓
-        </div>
+    <!-- Ganesh Image -->
 
-        <h1>
-            Thank You!
-        </h1>
+    <img
+        src="assets/ganesh-banner.jpg"
+        class="ganesh-top"
+        alt="Ganesh Banner"
+    >
 
-        <p id="successMessage">
-            Your donation has been recorded.
-        </p>
+    <!-- Success Badge -->
 
+    <div class="success-circle">
+        ✓
+    </div>
 
-        <div class="donation-summary">
+    <h1>Ganpati Bappa Morya! 🙏</h1>
 
-            <p>
-                <strong>Donor:</strong>
-                <span id="donorName">-</span>
-            </p>
+    <p class="success-subtitle" id="successMessage">
+        Your donation has been recorded successfully.
+    </p>
 
-            <p>
-                <strong>Amount:</strong>
-                ₹<span id="donationAmount">0</span>
-            </p>
+    <!-- Donation Receipt Card -->
 
-            <p>
-                <strong>Payment:</strong>
-                <span id="paymentType">-</span>
-            </p>
+    <div class="receipt-card">
 
-            <p>
-                <strong>Status:</strong>
-                <span id="paymentStatus">-</span>
-            </p>
+        <div class="receipt-header">
+
+            <h2>Donation Receipt</h2>
+
+            <span class="receipt-badge">
+                2026 Festival
+            </span>
 
         </div>
 
-
-        <div class="thank-you">
-
-            🙏
-
-            <h2>
-                Ganpati Bappa Morya!
-            </h2>
-
-            <p>
-                Thank you for supporting <strong>Arujuna Youth</strong>
-
-            </p><p>May Lord Ganesha bless you and your family with happiness and prosperity.</p>
-
+        <div class="receipt-row">
+            <span>👤 Donor</span>
+            <strong id="donorName">-</strong>
         </div>
 
+        <div class="receipt-row">
+            <span>💰 Amount</span>
+            <strong class="amount" id="donationAmount">₹0</strong>
+        </div>
 
-        <a
-            href="#"
-            id="whatsappButton"
-            class="payButton"
-            target="_blank"
-        >
-            Send Thank You on WhatsApp
-        </a>
+        <div class="receipt-row">
+            <span>💳 Payment Type</span>
+            <strong id="paymentType">-</strong>
+        </div>
 
+        <div class="receipt-row">
+            <span>✅ Status</span>
+            <strong id="paymentStatus">-</strong>
+        </div>
 
-        <a
-            href="index.html"
-            class="homeButton"
-        >
-            Make Another Donation
-        </a>
+        <div class="receipt-row">
+            <span>🧾 Transaction ID</span>
+            <strong id="transactionId">-</strong>
+        </div>
 
     </div>
 
+    <!-- Blessing -->
+
+    <div class="blessing-card">
+
+        <h2>🌼 Thank You for Your Contribution 🌼</h2>
+
+        <p>
+            Thank you for supporting
+            <strong>Arujuna Youth</strong>.
+        </p>
+
+        <p>
+            May Lord Ganesha remove every obstacle and fill your home with happiness, prosperity and success.
+        </p>
+
+    </div>
+
+    <!-- WhatsApp -->
+
+    <a
+        href="#"
+        id="whatsappButton"
+        class="whatsappBtn"
+        target="_blank"
+    >
+        📲 Share Thank You on WhatsApp
+    </a>
+
+    <!-- Home -->
+
+    <a
+        href="index.html"
+        class="homeBtn"
+    >
+        🏠 Make Another Donation
+    </a>
+
+</div>
 
 <script>
 
@@ -110,9 +130,7 @@ document.addEventListener(
 
         if (!savedDonation) {
 
-            document.getElementById(
-                "successMessage"
-            ).textContent =
+            document.getElementById("successMessage").textContent =
                 "Thank you for supporting Arujuna Youth.";
 
             return;
@@ -127,94 +145,68 @@ document.addEventListener(
             `${donation.donor_name} ${donation.donor_surname}`;
 
 
-        document.getElementById(
-            "donorName"
-        ).textContent =
+        document.getElementById("donorName").textContent =
             fullName;
 
 
-        document.getElementById(
-            "donationAmount"
-        ).textContent =
-            Number(donation.amount).toLocaleString(
-                "en-IN"
-            );
+        document.getElementById("donationAmount").textContent =
+            `₹${Number(donation.amount).toLocaleString("en-IN")}`;
 
 
-        document.getElementById(
-            "paymentType"
-        ).textContent =
+        document.getElementById("paymentType").textContent =
             donation.payment_type;
 
 
-        document.getElementById(
-            "paymentStatus"
-        ).textContent =
+        document.getElementById("paymentStatus").textContent =
             donation.payment_status;
 
 
-        if (
-            donation.payment_type === "Online" &&
-            donation.payment_status === "Pending"
-        ) {
+        document.getElementById("transactionId").textContent =
+            donation.transaction_id || "Cash Payment";
 
-            document.getElementById(
-                "successMessage"
-            ).textContent =
-                "Your donation details have been saved. Please complete the UPI payment.";
+
+        // Success Message
+
+        if (donation.payment_type === "Cash") {
+
+            document.getElementById("successMessage").textContent =
+                "Cash donation received successfully.";
 
         } else {
 
-            document.getElementById(
-                "successMessage"
-            ).textContent =
-                "Your donation has been successfully recorded. Thank you!";
-
+            document.getElementById("successMessage").textContent =
+                "Your online payment was completed successfully.";
         }
 
 
-        /*
-         * WhatsApp message
-         */
+        // WhatsApp Message
+
         const message =
-`🙏 Arujuna Youth - Ganesh Chanda Collection
+`🙏 Arujuna Youth - Ganesh Chanda Collection 2026
 
 Thank you ${fullName} for your donation of ₹${Number(donation.amount).toLocaleString("en-IN")}.
 
-Payment Type: ${donation.payment_type}
+Payment Type : ${donation.payment_type}
+Status : ${donation.payment_status}
 
-May Lord Ganesha bless you and your family with happiness and prosperity.
-
-🙏 Ganpati Bappa Morya!`;
+Ganpati Bappa Morya 🙏`;
 
 
-        /*
-         * If the donor said the mobile number
-         * is WhatsApp, use that number.
-         *
-         * Otherwise WhatsApp will open without
-         * a specific recipient.
-         */
         let whatsappURL;
-
 
         if (donation.is_whatsapp) {
 
             whatsappURL =
-                `https://wa.me/91${donation.mobile}` +
-                `?text=${encodeURIComponent(message)}`;
+                `https://wa.me/91${donation.mobile}?text=${encodeURIComponent(message)}`;
 
         } else {
 
             whatsappURL =
                 `https://wa.me/?text=${encodeURIComponent(message)}`;
-
         }
 
-
-        document.getElementById(
-            "whatsappButton"
-        ).href = whatsappURL;
+        document.getElementById("whatsappButton").href =
+            whatsappURL;
 
     }
 
@@ -223,5 +215,4 @@ May Lord Ganesha bless you and your family with happiness and prosperity.
 </script>
 
 </body>
-
 </html>
