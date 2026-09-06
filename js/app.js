@@ -13,10 +13,13 @@ const donationForm =
 const messageBox =
     document.getElementById("message");
 
-const cashButton =
+// IMPORTANT:
+// payment.js already declares upiButton and cashButton.
+// Therefore app.js uses different variable names.
+const appCashButton =
     document.getElementById("cashSubmitBtn");
 
-const upiButton =
+const appUpiButton =
     document.getElementById("upiButton");
 
 
@@ -32,26 +35,45 @@ const VERIFY_PAYMENT_URL =
 
 
 // ======================================================
-// CHECK REQUIRED ELEMENTS
+// DEBUG
 // ======================================================
 
 console.log("Arujuna Youth app.js loaded");
-
 console.log("Donation form:", donationForm);
-console.log("Cash button:", cashButton);
-console.log("UPI button:", upiButton);
+console.log("Cash button:", appCashButton);
+console.log("UPI button:", appUpiButton);
 console.log("Supabase:", typeof supabaseClient);
 console.log("Razorpay:", typeof Razorpay);
+
+
+// ======================================================
+// SAFETY CHECK
+// ======================================================
+
+if (!donationForm) {
+    console.error("ERROR: donationForm not found.");
+}
+
+if (!messageBox) {
+    console.error("ERROR: message element not found.");
+}
+
+if (!appCashButton) {
+    console.error("ERROR: cashSubmitBtn not found.");
+}
+
+if (!appUpiButton) {
+    console.error("ERROR: upiButton not found.");
+}
 
 
 // ======================================================
 // ONLINE PAY BUTTON
 // ======================================================
 
-upiButton.addEventListener("click", function () {
+appUpiButton.addEventListener("click", function () {
 
     console.log("Pay Now clicked");
-
 
     // Browser validation
     if (!donationForm.reportValidity()) {
@@ -60,7 +82,6 @@ upiButton.addEventListener("click", function () {
 
         return;
     }
-
 
     // Trigger form submit
     donationForm.requestSubmit();
@@ -76,11 +97,11 @@ donationForm.addEventListener(
     "submit",
     async function (event) {
 
+        // VERY IMPORTANT
+        // Prevent normal browser GET form submission.
         event.preventDefault();
 
-
         console.log("Donation form submitted");
-
 
         showMessage("", "green");
 
@@ -195,10 +216,9 @@ donationForm.addEventListener(
 
             console.log("Starting Cash donation");
 
+            appCashButton.disabled = true;
 
-            cashButton.disabled = true;
-
-            cashButton.textContent =
+            appCashButton.textContent =
                 "Saving Donation...";
 
 
@@ -274,7 +294,7 @@ donationForm.addEventListener(
                 );
 
 
-                // Save for success page
+                // Save donation for success page
                 localStorage.setItem(
                     "lastDonation",
                     JSON.stringify(data)
@@ -282,13 +302,17 @@ donationForm.addEventListener(
 
 
                 // Redirect to success page
+                console.log(
+                    "Redirecting to success.html"
+                );
+
                 window.location.href =
                     `success.html?id=${encodeURIComponent(
                         data.id
                     )}&type=cash`;
 
-
                 return;
+
 
             } catch (error) {
 
@@ -305,13 +329,11 @@ donationForm.addEventListener(
                 );
 
 
-                cashButton.disabled = false;
+                appCashButton.disabled = false;
 
-                cashButton.textContent =
+                appCashButton.textContent =
                     "Submit Cash Donation";
-
             }
-
 
             return;
         }
@@ -324,14 +346,13 @@ donationForm.addEventListener(
         console.log("Starting Online payment");
 
 
-        upiButton.disabled = true;
+        appUpiButton.disabled = true;
 
-        upiButton.textContent =
+        appUpiButton.textContent =
             "Creating Payment...";
 
 
         try {
-
 
             // ==================================================
             // CREATE RAZORPAY ORDER
@@ -439,7 +460,7 @@ donationForm.addEventListener(
 
 
             // ==================================================
-            // OPEN RAZORPAY
+            // CHECK RAZORPAY
             // ==================================================
 
             if (
@@ -453,9 +474,13 @@ donationForm.addEventListener(
             }
 
 
-            upiButton.textContent =
+            appUpiButton.textContent =
                 "Opening Payment...";
 
+
+            // ==================================================
+            // RAZORPAY OPTIONS
+            // ==================================================
 
             const options = {
 
@@ -478,10 +503,6 @@ donationForm.addEventListener(
                     orderId,
 
 
-                // ------------------------------------------
-                // Prefill donor
-                // ------------------------------------------
-
                 prefill: {
 
                     name:
@@ -491,10 +512,6 @@ donationForm.addEventListener(
                         mobile
                 },
 
-
-                // ------------------------------------------
-                // Notes
-                // ------------------------------------------
 
                 notes: {
 
@@ -509,10 +526,6 @@ donationForm.addEventListener(
                 },
 
 
-                // ------------------------------------------
-                // Theme
-                // ------------------------------------------
-
                 theme: {
 
                     color:
@@ -521,7 +534,7 @@ donationForm.addEventListener(
 
 
                 // ==================================================
-                // SUCCESS
+                // PAYMENT SUCCESS
                 // ==================================================
 
                 handler:
@@ -535,24 +548,23 @@ donationForm.addEventListener(
                         );
 
 
-                        upiButton.disabled =
+                        appUpiButton.disabled =
                             true;
 
-                        upiButton.textContent =
+                        appUpiButton.textContent =
                             "Verifying Payment...";
 
 
                         try {
 
-
-                            // ==========================================
-                            // VERIFY PAYMENT
-                            // ==========================================
-
                             console.log(
                                 "Calling verify-payment..."
                             );
 
+
+                            // ==========================================
+                            // VERIFY PAYMENT
+                            // ==========================================
 
                             const verifyResponse =
                                 await fetch(
@@ -636,7 +648,6 @@ donationForm.addEventListener(
 
                             } else {
 
-                                // Fallback data
                                 const localDonation = {
 
                                     id:
@@ -703,6 +714,7 @@ donationForm.addEventListener(
                                     donationId
                                 )}&type=online`;
 
+
                         } catch (error) {
 
                             console.error(
@@ -718,10 +730,10 @@ donationForm.addEventListener(
                             );
 
 
-                            upiButton.disabled =
+                            appUpiButton.disabled =
                                 false;
 
-                            upiButton.textContent =
+                            appUpiButton.textContent =
                                 `💳 Pay ₹${amount.toFixed(2)} Now`;
                         }
                     },
@@ -741,10 +753,10 @@ donationForm.addEventListener(
                             );
 
 
-                            upiButton.disabled =
+                            appUpiButton.disabled =
                                 false;
 
-                            upiButton.textContent =
+                            appUpiButton.textContent =
                                 `💳 Pay ₹${amount.toFixed(2)} Now`;
 
 
@@ -790,10 +802,10 @@ donationForm.addEventListener(
                     );
 
 
-                    upiButton.disabled =
+                    appUpiButton.disabled =
                         false;
 
-                    upiButton.textContent =
+                    appUpiButton.textContent =
                         `💳 Pay ₹${amount.toFixed(2)} Now`;
                 }
             );
@@ -826,10 +838,10 @@ donationForm.addEventListener(
             );
 
 
-            upiButton.disabled =
+            appUpiButton.disabled =
                 false;
 
-            upiButton.textContent =
+            appUpiButton.textContent =
                 `💳 Pay ₹${amount.toFixed(2)} Now`;
         }
 
