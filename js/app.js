@@ -13,9 +13,11 @@ const donationForm =
 const messageBox =
     document.getElementById("message");
 
-// IMPORTANT:
-// payment.js already declares upiButton and cashButton.
-// Therefore app.js uses different variable names.
+// payment.js already declares:
+// upiButton
+// cashButton
+//
+// So app.js uses different variable names.
 const appCashButton =
     document.getElementById("cashSubmitBtn");
 
@@ -33,21 +35,28 @@ const CREATE_ORDER_URL =
 const VERIFY_PAYMENT_URL =
     `${SUPABASE_URL}/functions/v1/verify-payment`;
 
+const CASH_DONATION_URL =
+    `${SUPABASE_URL}/functions/v1/create-cash-donation`;
+
 
 // ======================================================
 // DEBUG
 // ======================================================
 
+console.log("======================================");
 console.log("Arujuna Youth app.js loaded");
+console.log("======================================");
+
 console.log("Donation form:", donationForm);
 console.log("Cash button:", appCashButton);
 console.log("UPI button:", appUpiButton);
 console.log("Supabase:", typeof supabaseClient);
 console.log("Razorpay:", typeof Razorpay);
+console.log("Cash Function:", CASH_DONATION_URL);
 
 
 // ======================================================
-// SAFETY CHECK
+// REQUIRED ELEMENT CHECK
 // ======================================================
 
 if (!donationForm) {
@@ -71,22 +80,29 @@ if (!appUpiButton) {
 // ONLINE PAY BUTTON
 // ======================================================
 
-appUpiButton.addEventListener("click", function () {
+appUpiButton.addEventListener(
+    "click",
+    function () {
 
-    console.log("Pay Now clicked");
+        console.log("Pay Now clicked");
 
-    // Browser validation
-    if (!donationForm.reportValidity()) {
 
-        console.log("Form validation failed");
+        // Browser validation
+        if (!donationForm.reportValidity()) {
 
-        return;
+            console.log(
+                "Form validation failed"
+            );
+
+            return;
+        }
+
+
+        // Trigger form submit
+        donationForm.requestSubmit();
+
     }
-
-    // Trigger form submit
-    donationForm.requestSubmit();
-
-});
+);
 
 
 // ======================================================
@@ -97,13 +113,28 @@ donationForm.addEventListener(
     "submit",
     async function (event) {
 
-        // VERY IMPORTANT
-        // Prevent normal browser GET form submission.
+        // IMPORTANT:
+        // Prevent normal browser form GET submission.
         event.preventDefault();
 
-        console.log("Donation form submitted");
 
-        showMessage("", "green");
+        console.log(
+            "======================================"
+        );
+
+        console.log(
+            "Donation form submitted"
+        );
+
+        console.log(
+            "======================================"
+        );
+
+
+        showMessage(
+            "",
+            "green"
+        );
 
 
         // ==================================================
@@ -112,15 +143,18 @@ donationForm.addEventListener(
 
         const name =
             document.getElementById("name")
-                .value.trim();
+                .value
+                .trim();
 
         const surname =
             document.getElementById("surname")
-                .value.trim();
+                .value
+                .trim();
 
         const mobile =
             document.getElementById("mobile")
-                .value.trim();
+                .value
+                .trim();
 
         const isWhatsapp =
             document.getElementById("whatsapp")
@@ -128,7 +162,8 @@ donationForm.addEventListener(
 
         const address =
             document.getElementById("address")
-                .value.trim();
+                .value
+                .trim();
 
         const amount =
             Number(
@@ -142,6 +177,10 @@ donationForm.addEventListener(
                 "input[name='payment']:checked"
             );
 
+
+        // ==================================================
+        // PAYMENT METHOD CHECK
+        // ==================================================
 
         if (!selectedPayment) {
 
@@ -158,8 +197,15 @@ donationForm.addEventListener(
             selectedPayment.value;
 
 
-        console.log("Payment type:", paymentType);
-        console.log("Amount:", amount);
+        console.log(
+            "Payment type:",
+            paymentType
+        );
+
+        console.log(
+            "Amount:",
+            amount
+        );
 
 
         // ==================================================
@@ -183,7 +229,9 @@ donationForm.addEventListener(
         }
 
 
-        if (!/^[0-9]{10}$/.test(mobile)) {
+        if (
+            !/^[0-9]{10}$/.test(mobile)
+        ) {
 
             showMessage(
                 "Please enter a valid 10-digit mobile number.",
@@ -214,9 +262,21 @@ donationForm.addEventListener(
 
         if (paymentType === "Cash") {
 
-            console.log("Starting Cash donation");
+            console.log(
+                "======================================"
+            );
 
-            appCashButton.disabled = true;
+            console.log(
+                "Starting Cash donation"
+            );
+
+            console.log(
+                "======================================"
+            );
+
+
+            appCashButton.disabled =
+                true;
 
             appCashButton.textContent =
                 "Saving Donation...";
@@ -224,68 +284,105 @@ donationForm.addEventListener(
 
             try {
 
-                const donationData = {
-
-                    title:
-                        "Arujuna Youth",
-
-                    donor_name:
-                        name,
-
-                    donor_surname:
-                        surname,
-
-                    mobile:
-                        mobile,
-
-                    is_whatsapp:
-                        isWhatsapp,
-
-                    address:
-                        address,
-
-                    amount:
-                        amount,
-
-                    payment_type:
-                        "Cash",
-
-                    payment_status:
-                        "Success"
-                };
-
+                // ==================================================
+                // CALL CASH EDGE FUNCTION
+                // ==================================================
 
                 console.log(
-                    "Cash donation data:",
-                    donationData
+                    "Calling Cash Function:",
+                    CASH_DONATION_URL
                 );
 
 
-                const {
-                    data,
-                    error
-                } =
-                    await supabaseClient
-                        .from("donations")
-                        .insert([
-                            donationData
-                        ])
-                        .select()
-                        .single();
+                const response =
+                    await fetch(
+                        CASH_DONATION_URL,
+                        {
+                            method: "POST",
 
+                            headers: {
+                                "Content-Type":
+                                    "application/json",
 
-                if (error) {
+                                "apikey":
+                                    SUPABASE_KEY
+                            },
 
-                    console.error(
-                        "Supabase Cash error:",
-                        error
+                            body:
+                                JSON.stringify({
+
+                                    donor_name:
+                                        name,
+
+                                    donor_surname:
+                                        surname,
+
+                                    mobile:
+                                        mobile,
+
+                                    is_whatsapp:
+                                        isWhatsapp,
+
+                                    address:
+                                        address,
+
+                                    amount:
+                                        amount
+                                })
+                        }
                     );
 
+
+                console.log(
+                    "Cash HTTP status:",
+                    response.status
+                );
+
+
+                // ==================================================
+                // READ RESPONSE
+                // ==================================================
+
+                const result =
+                    await response.json();
+
+
+                console.log(
+                    "Cash donation response:",
+                    result
+                );
+
+
+                // ==================================================
+                // CHECK RESPONSE
+                // ==================================================
+
+                if (!response.ok) {
+
                     throw new Error(
-                        error.message ||
+                        result.error ||
                         "Could not save cash donation."
                     );
                 }
+
+
+                if (
+                    !result.success ||
+                    !result.donation
+                ) {
+
+                    throw new Error(
+                        "Cash donation was not saved."
+                    );
+                }
+
+
+                // ==================================================
+                // DONATION SUCCESS
+                // ==================================================
+
+                const data =
+                    result.donation;
 
 
                 console.log(
@@ -294,22 +391,30 @@ donationForm.addEventListener(
                 );
 
 
-                // Save donation for success page
+                // ==================================================
+                // SAVE FOR SUCCESS PAGE
+                // ==================================================
+
                 localStorage.setItem(
                     "lastDonation",
                     JSON.stringify(data)
                 );
 
 
-                // Redirect to success page
+                // ==================================================
+                // REDIRECT
+                // ==================================================
+
                 console.log(
                     "Redirecting to success.html"
                 );
+
 
                 window.location.href =
                     `success.html?id=${encodeURIComponent(
                         data.id
                     )}&type=cash`;
+
 
                 return;
 
@@ -329,11 +434,13 @@ donationForm.addEventListener(
                 );
 
 
-                appCashButton.disabled = false;
+                appCashButton.disabled =
+                    false;
 
                 appCashButton.textContent =
                     "Submit Cash Donation";
             }
+
 
             return;
         }
@@ -343,10 +450,21 @@ donationForm.addEventListener(
         // ONLINE PAYMENT
         // ==================================================
 
-        console.log("Starting Online payment");
+        console.log(
+            "======================================"
+        );
+
+        console.log(
+            "Starting Online payment"
+        );
+
+        console.log(
+            "======================================"
+        );
 
 
-        appUpiButton.disabled = true;
+        appUpiButton.disabled =
+            true;
 
         appUpiButton.textContent =
             "Creating Payment...";
@@ -403,6 +521,12 @@ donationForm.addEventListener(
                 );
 
 
+            console.log(
+                "Create order HTTP status:",
+                response.status
+            );
+
+
             const result =
                 await response.json();
 
@@ -421,6 +545,10 @@ donationForm.addEventListener(
                 );
             }
 
+
+            // ==================================================
+            // GET ORDER DATA
+            // ==================================================
 
             const donationId =
                 result.donationId;
@@ -452,6 +580,11 @@ donationForm.addEventListener(
                 );
             }
 
+
+            console.log(
+                "Donation ID:",
+                donationId
+            );
 
             console.log(
                 "Razorpay Order:",
@@ -503,6 +636,10 @@ donationForm.addEventListener(
                     orderId,
 
 
+                // ==================================================
+                // PREFILL
+                // ==================================================
+
                 prefill: {
 
                     name:
@@ -512,6 +649,10 @@ donationForm.addEventListener(
                         mobile
                 },
 
+
+                // ==================================================
+                // NOTES
+                // ==================================================
 
                 notes: {
 
@@ -525,6 +666,10 @@ donationForm.addEventListener(
                         surname
                 },
 
+
+                // ==================================================
+                // THEME
+                // ==================================================
 
                 theme: {
 
@@ -543,8 +688,19 @@ donationForm.addEventListener(
                     ) {
 
                         console.log(
-                            "Razorpay SUCCESS:",
+                            "======================================"
+                        );
+
+                        console.log(
+                            "Razorpay SUCCESS"
+                        );
+
+                        console.log(
                             paymentResponse
+                        );
+
+                        console.log(
+                            "======================================"
                         );
 
 
@@ -557,14 +713,14 @@ donationForm.addEventListener(
 
                         try {
 
+                            // ==========================================
+                            // VERIFY PAYMENT
+                            // ==========================================
+
                             console.log(
                                 "Calling verify-payment..."
                             );
 
-
-                            // ==========================================
-                            // VERIFY PAYMENT
-                            // ==========================================
 
                             const verifyResponse =
                                 await fetch(
@@ -602,6 +758,12 @@ donationForm.addEventListener(
                                 );
 
 
+                            console.log(
+                                "Verify HTTP status:",
+                                verifyResponse.status
+                            );
+
+
                             const verifyResult =
                                 await verifyResponse.json();
 
@@ -612,7 +774,13 @@ donationForm.addEventListener(
                             );
 
 
-                            if (!verifyResponse.ok) {
+                            // ==========================================
+                            // CHECK VERIFICATION
+                            // ==========================================
+
+                            if (
+                                !verifyResponse.ok
+                            ) {
 
                                 throw new Error(
                                     verifyResult.error ||
@@ -632,7 +800,7 @@ donationForm.addEventListener(
 
 
                             // ==========================================
-                            // SAVE DONATION
+                            // SAVE VERIFIED DONATION
                             // ==========================================
 
                             if (
@@ -648,6 +816,7 @@ donationForm.addEventListener(
 
                             } else {
 
+                                // Fallback donation object
                                 const localDonation = {
 
                                     id:
@@ -703,6 +872,10 @@ donationForm.addEventListener(
                             // ==========================================
                             // REDIRECT
                             // ==========================================
+
+                            console.log(
+                                "Payment verified successfully."
+                            );
 
                             console.log(
                                 "Redirecting to success.html"
@@ -812,7 +985,7 @@ donationForm.addEventListener(
 
 
             // ==================================================
-            // OPEN CHECKOUT
+            // OPEN RAZORPAY
             // ==================================================
 
             console.log(
