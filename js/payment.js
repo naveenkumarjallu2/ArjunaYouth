@@ -1,14 +1,11 @@
-const YOUR_UPI_ID = "navibittu211@ibl";
-const YOUR_NAME = "Arujuna Youth";
+// payment.js
+// Razorpay payment UI
 
 const paymentRadios =
     document.querySelectorAll("input[name='payment']");
 
 const onlineSection =
     document.getElementById("onlineSection");
-
-const qrImage =
-    document.getElementById("qrImage");
 
 const upiButton =
     document.getElementById("upiButton");
@@ -29,7 +26,7 @@ paymentRadios.forEach(radio => {
 
 amountInput.addEventListener(
     "input",
-    generateQR
+    updatePayButton
 );
 
 
@@ -45,7 +42,7 @@ function togglePayment() {
 
         onlineSection.classList.remove("hidden");
 
-        generateQR();
+        updatePayButton();
 
     } else {
 
@@ -56,32 +53,25 @@ function togglePayment() {
 }
 
 
-function generateQR() {
+function updatePayButton() {
 
-    const amount = Number(amountInput.value);
+    const amount =
+        Number(amountInput.value);
+
 
     if (!amount || amount <= 0) {
-
-        upiButton.removeAttribute("href");
 
         upiButton.textContent =
             "Enter Amount First";
 
+        upiButton.disabled = true;
+
         return;
     }
 
-    const upiLink =
-        `upi://pay` +
-        `?pa=${encodeURIComponent(YOUR_UPI_ID)}` +
-        `&pn=${encodeURIComponent(YOUR_NAME)}` +
-        `&am=${amount.toFixed(2)}` +
-        `&cu=INR` +
-        `&tn=${encodeURIComponent(
-            "Ganesh Chanda Donation"
-        )}`;
-
-    upiButton.href = upiLink;
 
     upiButton.textContent =
         `💳 Pay ₹${amount.toFixed(2)} Now`;
+
+    upiButton.disabled = false;
 }

@@ -1,4 +1,4 @@
-// Supabase Configuration and Client
+// Supabase.js Configuration and Client
 const SUPABASE_URL = "https://gvvidndiuizrpyghuoyx.supabase.co";
 const SUPABASE_KEY = "sb_publishable_oOeXAhdowd-Oeah6787hxA_7dHioODf";
 

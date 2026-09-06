@@ -8,6 +8,7 @@
   <link rel="stylesheet" href="css/style.css">
 
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="https://checkout.razorpay.com/v1/checkout.js"></script>
 </head>
 
 <body>
@@ -70,13 +71,13 @@
         Tap the button below to pay directly using your UPI app.
     </p>
 
-    <a
-        id="upiButton"
-        class="payButton"
-        href="#"
-    >
-        💳 Pay Now
-    </a>
+    <button
+    type="button"
+    id="upiButton"
+    class="payButton"
+>
+    💳 Pay Now
+</button>
 
     <p class="small-text">
         Google Pay, PhonePe, Paytm, BHIM and other UPI apps
@@ -94,6 +95,8 @@ Submit Donation
 <div id="message"></div>
 
 </div>
+
+<script src="https://checkout.razorpay.com/v1/checkout.js"></script>
 
 <script src="js/supabase.js"></script>
 <script src="js/payment.js"></script>
