@@ -1,6 +1,11 @@
 // app.js
 // Arujuna Youth - Ganesh Chanda
-// Razorpay payment integration
+// Supabase + Razorpay Payment Integration
+
+
+// ======================================================
+// ELEMENTS
+// ======================================================
 
 const donationForm =
     document.getElementById("donationForm");
@@ -8,24 +13,16 @@ const donationForm =
 const messageBox =
     document.getElementById("message");
 
-const submitButton =
-    document.querySelector(".submitBtn");
+const cashButton =
+    document.getElementById("cashSubmitBtn");
 
-const upiButton=document.getElementById("upiButton");
+const upiButton =
+    document.getElementById("upiButton");
 
-upiButton.addEventListener("click", () => {
 
-    // Validate HTML form first
-    if (!donationForm.reportValidity()) {
-        return;
-    }
-
-    // Trigger the existing submit handler
-    donationForm.requestSubmit();
-
-});
-
-// Supabase Edge Function URLs
+// ======================================================
+// SUPABASE EDGE FUNCTION URLs
+// ======================================================
 
 const CREATE_ORDER_URL =
     `${SUPABASE_URL}/functions/v1/create-payment-order`;
@@ -34,9 +31,46 @@ const VERIFY_PAYMENT_URL =
     `${SUPABASE_URL}/functions/v1/verify-payment`;
 
 
-// --------------------------------------------------
-// Form Submit
-// --------------------------------------------------
+// ======================================================
+// CHECK REQUIRED ELEMENTS
+// ======================================================
+
+console.log("Arujuna Youth app.js loaded");
+
+console.log("Donation form:", donationForm);
+console.log("Cash button:", cashButton);
+console.log("UPI button:", upiButton);
+console.log("Supabase:", typeof supabaseClient);
+console.log("Razorpay:", typeof Razorpay);
+
+
+// ======================================================
+// ONLINE PAY BUTTON
+// ======================================================
+
+upiButton.addEventListener("click", function () {
+
+    console.log("Pay Now clicked");
+
+
+    // Browser validation
+    if (!donationForm.reportValidity()) {
+
+        console.log("Form validation failed");
+
+        return;
+    }
+
+
+    // Trigger form submit
+    donationForm.requestSubmit();
+
+});
+
+
+// ======================================================
+// FORM SUBMIT
+// ======================================================
 
 donationForm.addEventListener(
     "submit",
@@ -44,13 +78,16 @@ donationForm.addEventListener(
 
         event.preventDefault();
 
-        messageBox.textContent = "";
-        messageBox.style.color = "green";
+
+        console.log("Donation form submitted");
 
 
-        // --------------------------------------------
-        // Get form values
-        // --------------------------------------------
+        showMessage("", "green");
+
+
+        // ==================================================
+        // GET FORM VALUES
+        // ==================================================
 
         const name =
             document.getElementById("name")
@@ -78,15 +115,35 @@ donationForm.addEventListener(
                     .value
             );
 
-        const paymentType =
+
+        const selectedPayment =
             document.querySelector(
                 "input[name='payment']:checked"
-            ).value;
+            );
 
 
-        // --------------------------------------------
-        // Validation
-        // --------------------------------------------
+        if (!selectedPayment) {
+
+            showMessage(
+                "Please select a payment method.",
+                "red"
+            );
+
+            return;
+        }
+
+
+        const paymentType =
+            selectedPayment.value;
+
+
+        console.log("Payment type:", paymentType);
+        console.log("Amount:", amount);
+
+
+        // ==================================================
+        // VALIDATION
+        // ==================================================
 
         if (
             !name ||
@@ -105,9 +162,7 @@ donationForm.addEventListener(
         }
 
 
-        if (
-            !/^[0-9]{10}$/.test(mobile)
-        ) {
+        if (!/^[0-9]{10}$/.test(mobile)) {
 
             showMessage(
                 "Please enter a valid 10-digit mobile number.",
@@ -132,23 +187,22 @@ donationForm.addEventListener(
         }
 
 
-        // --------------------------------------------
-        // Start processing
-        // --------------------------------------------
+        // ==================================================
+        // CASH PAYMENT
+        // ==================================================
 
-        try {
+        if (paymentType === "Cash") {
 
-            submitButton.disabled = true;
-
-            submitButton.textContent =
-                "Processing...";
+            console.log("Starting Cash donation");
 
 
-            // ==================================================
-            // CASH PAYMENT
-            // ==================================================
+            cashButton.disabled = true;
 
-            if (paymentType === "Cash") {
+            cashButton.textContent =
+                "Saving Donation...";
+
+
+            try {
 
                 const donationData = {
 
@@ -181,6 +235,12 @@ donationForm.addEventListener(
                 };
 
 
+                console.log(
+                    "Cash donation data:",
+                    donationData
+                );
+
+
                 const {
                     data,
                     error
@@ -197,24 +257,31 @@ donationForm.addEventListener(
                 if (error) {
 
                     console.error(
-                        "Cash donation error:",
+                        "Supabase Cash error:",
                         error
                     );
 
-                    throw error;
+                    throw new Error(
+                        error.message ||
+                        "Could not save cash donation."
+                    );
                 }
 
 
-                // Save donation for success page
+                console.log(
+                    "Cash donation saved:",
+                    data
+                );
 
+
+                // Save for success page
                 localStorage.setItem(
                     "lastDonation",
                     JSON.stringify(data)
                 );
 
 
-                // Redirect
-
+                // Redirect to success page
                 window.location.href =
                     `success.html?id=${encodeURIComponent(
                         data.id
@@ -222,20 +289,59 @@ donationForm.addEventListener(
 
 
                 return;
+
+            } catch (error) {
+
+                console.error(
+                    "Cash donation failed:",
+                    error
+                );
+
+
+                showMessage(
+                    error.message ||
+                    "Unable to save cash donation.",
+                    "red"
+                );
+
+
+                cashButton.disabled = false;
+
+                cashButton.textContent =
+                    "Submit Cash Donation";
+
             }
 
 
+            return;
+        }
+
+
+        // ==================================================
+        // ONLINE PAYMENT
+        // ==================================================
+
+        console.log("Starting Online payment");
+
+
+        upiButton.disabled = true;
+
+        upiButton.textContent =
+            "Creating Payment...";
+
+
+        try {
+
+
             // ==================================================
-            // ONLINE PAYMENT
+            // CREATE RAZORPAY ORDER
             // ==================================================
 
-            submitButton.textContent =
-                "Creating Payment...";
+            console.log(
+                "Calling:",
+                CREATE_ORDER_URL
+            );
 
-
-            // --------------------------------------------
-            // Create Razorpay order
-            // --------------------------------------------
 
             const response =
                 await fetch(
@@ -315,17 +421,39 @@ donationForm.addEventListener(
                 !razorpayAmount
             ) {
 
+                console.error(
+                    "Invalid Razorpay response:",
+                    result
+                );
+
                 throw new Error(
                     "Invalid payment order response."
                 );
             }
 
 
+            console.log(
+                "Razorpay Order:",
+                orderId
+            );
+
+
             // ==================================================
-            // Razorpay Checkout
+            // OPEN RAZORPAY
             // ==================================================
 
-            submitButton.textContent =
+            if (
+                typeof Razorpay ===
+                "undefined"
+            ) {
+
+                throw new Error(
+                    "Razorpay Checkout is not loaded."
+                );
+            }
+
+
+            upiButton.textContent =
                 "Opening Payment...";
 
 
@@ -350,9 +478,9 @@ donationForm.addEventListener(
                     orderId,
 
 
-                // ----------------------------------------
-                // Donor information
-                // ----------------------------------------
+                // ------------------------------------------
+                // Prefill donor
+                // ------------------------------------------
 
                 prefill: {
 
@@ -364,9 +492,9 @@ donationForm.addEventListener(
                 },
 
 
-                // ----------------------------------------
-                // Extra information
-                // ----------------------------------------
+                // ------------------------------------------
+                // Notes
+                // ------------------------------------------
 
                 notes: {
 
@@ -381,9 +509,9 @@ donationForm.addEventListener(
                 },
 
 
-                // ----------------------------------------
+                // ------------------------------------------
                 // Theme
-                // ----------------------------------------
+                // ------------------------------------------
 
                 theme: {
 
@@ -393,7 +521,7 @@ donationForm.addEventListener(
 
 
                 // ==================================================
-                // Payment successful
+                // SUCCESS
                 // ==================================================
 
                 handler:
@@ -402,23 +530,29 @@ donationForm.addEventListener(
                     ) {
 
                         console.log(
-                            "Razorpay payment response:",
+                            "Razorpay SUCCESS:",
                             paymentResponse
                         );
 
 
+                        upiButton.disabled =
+                            true;
+
+                        upiButton.textContent =
+                            "Verifying Payment...";
+
+
                         try {
 
-                            submitButton.disabled =
-                                true;
 
-                            submitButton.textContent =
-                                "Verifying Payment...";
+                            // ==========================================
+                            // VERIFY PAYMENT
+                            // ==========================================
 
+                            console.log(
+                                "Calling verify-payment..."
+                            );
 
-                            // ----------------------------------------
-                            // Verify payment on server
-                            // ----------------------------------------
 
                             const verifyResponse =
                                 await fetch(
@@ -461,14 +595,12 @@ donationForm.addEventListener(
 
 
                             console.log(
-                                "Verify payment response:",
+                                "Verify response:",
                                 verifyResult
                             );
 
 
-                            if (
-                                !verifyResponse.ok
-                            ) {
+                            if (!verifyResponse.ok) {
 
                                 throw new Error(
                                     verifyResult.error ||
@@ -487,9 +619,9 @@ donationForm.addEventListener(
                             }
 
 
-                            // ----------------------------------------
-                            // Save donation locally
-                            // ----------------------------------------
+                            // ==========================================
+                            // SAVE DONATION
+                            // ==========================================
 
                             if (
                                 verifyResult.donation
@@ -501,12 +633,70 @@ donationForm.addEventListener(
                                         verifyResult.donation
                                     )
                                 );
+
+                            } else {
+
+                                // Fallback data
+                                const localDonation = {
+
+                                    id:
+                                        donationId,
+
+                                    donor_name:
+                                        name,
+
+                                    donor_surname:
+                                        surname,
+
+                                    mobile:
+                                        mobile,
+
+                                    is_whatsapp:
+                                        isWhatsapp,
+
+                                    address:
+                                        address,
+
+                                    amount:
+                                        amount,
+
+                                    payment_type:
+                                        "Online",
+
+                                    payment_status:
+                                        "Success",
+
+                                    transaction_id:
+                                        paymentResponse
+                                            .razorpay_payment_id,
+
+                                    payment_order_id:
+                                        paymentResponse
+                                            .razorpay_order_id,
+
+                                    payment_payment_id:
+                                        paymentResponse
+                                            .razorpay_payment_id
+                                };
+
+
+                                localStorage.setItem(
+                                    "lastDonation",
+                                    JSON.stringify(
+                                        localDonation
+                                    )
+                                );
                             }
 
 
-                            // ----------------------------------------
-                            // Payment successful
-                            // ----------------------------------------
+                            // ==========================================
+                            // REDIRECT
+                            // ==========================================
+
+                            console.log(
+                                "Redirecting to success.html"
+                            );
+
 
                             window.location.href =
                                 `success.html?id=${encodeURIComponent(
@@ -522,22 +712,23 @@ donationForm.addEventListener(
 
 
                             showMessage(
-                                "Payment was received, but verification failed. Please contact Arujuna Youth with your payment details.",
-                                "orange"
+                                error.message ||
+                                "Payment verification failed.",
+                                "red"
                             );
 
 
-                            submitButton.disabled =
+                            upiButton.disabled =
                                 false;
 
-                            submitButton.textContent =
-                                "Submit Donation";
+                            upiButton.textContent =
+                                `💳 Pay ₹${amount.toFixed(2)} Now`;
                         }
                     },
 
 
                 // ==================================================
-                // Checkout closed
+                // CHECKOUT CLOSED
                 // ==================================================
 
                 modal: {
@@ -545,11 +736,16 @@ donationForm.addEventListener(
                     ondismiss:
                         function () {
 
-                            submitButton.disabled =
+                            console.log(
+                                "Razorpay checkout closed"
+                            );
+
+
+                            upiButton.disabled =
                                 false;
 
-                            submitButton.textContent =
-                                "Submit Donation";
+                            upiButton.textContent =
+                                `💳 Pay ₹${amount.toFixed(2)} Now`;
 
 
                             showMessage(
@@ -561,32 +757,17 @@ donationForm.addEventListener(
             };
 
 
-            // --------------------------------------------
-            // Check Razorpay loaded
-            // --------------------------------------------
-
-            if (
-                typeof Razorpay ===
-                "undefined"
-            ) {
-
-                throw new Error(
-                    "Razorpay Checkout could not be loaded. Please check your internet connection."
-                );
-            }
-
-
-            // --------------------------------------------
-            // Open Razorpay
-            // --------------------------------------------
+            // ==================================================
+            // CREATE RAZORPAY INSTANCE
+            // ==================================================
 
             const razorpay =
                 new Razorpay(options);
 
 
-            // --------------------------------------------
-            // Payment failed
-            // --------------------------------------------
+            // ==================================================
+            // PAYMENT FAILED
+            // ==================================================
 
             razorpay.on(
                 "payment.failed",
@@ -609,12 +790,21 @@ donationForm.addEventListener(
                     );
 
 
-                    submitButton.disabled =
+                    upiButton.disabled =
                         false;
 
-                    submitButton.textContent =
-                        "Submit Donation";
+                    upiButton.textContent =
+                        `💳 Pay ₹${amount.toFixed(2)} Now`;
                 }
+            );
+
+
+            // ==================================================
+            // OPEN CHECKOUT
+            // ==================================================
+
+            console.log(
+                "Opening Razorpay..."
             );
 
 
@@ -624,7 +814,7 @@ donationForm.addEventListener(
         } catch (error) {
 
             console.error(
-                "Donation error:",
+                "Online payment error:",
                 error
             );
 
@@ -636,20 +826,20 @@ donationForm.addEventListener(
             );
 
 
-            submitButton.disabled =
+            upiButton.disabled =
                 false;
 
-            submitButton.textContent =
-                "Submit Donation";
+            upiButton.textContent =
+                `💳 Pay ₹${amount.toFixed(2)} Now`;
         }
 
     }
 );
 
 
-// --------------------------------------------------
-// Message helper
-// --------------------------------------------------
+// ======================================================
+// MESSAGE HELPER
+// ======================================================
 
 function showMessage(
     text,

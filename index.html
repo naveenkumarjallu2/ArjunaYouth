@@ -1,176 +1,403 @@
-<!--index.html-->
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
+
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Arujuna Youth - Ganesh Chanda Collection</title>
 
-    <link rel="stylesheet" href="css/style.css">
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
 
-    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-    <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+    <title>
+        Arujuna Youth - Ganesh Chanda Collection
+    </title>
+
+
+    <!-- =========================================
+         CSS
+    ========================================== -->
+
+    <link
+        rel="stylesheet"
+        href="css/style.css"
+    >
+
+
+    <!-- =========================================
+         SUPABASE
+    ========================================== -->
+
+    <script
+        src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2">
+    </script>
+
+
+    <!-- =========================================
+         RAZORPAY
+         Load ONLY ONCE
+    ========================================== -->
+
+    <script
+        src="https://checkout.razorpay.com/v1/checkout.js">
+    </script>
+
 </head>
+
 
 <body>
 
-<header class="hero">
 
-    <img src="assets/back.jpg" class="banner">
+    <!-- =========================================
+         HERO SECTION
+    ========================================== -->
 
-    <div class="overlay">
+    <header class="hero">
 
-        <div class="festival-chip">
-            ✨ Ganesh Chaturthi 2026 ✨
+        <img
+            src="assets/back.jpg"
+            class="banner"
+            alt="Ganesh Chaturthi"
+        >
+
+
+        <div class="overlay">
+
+            <div class="festival-chip">
+                ✨ Ganesh Chaturthi 2026 ✨
+            </div>
+
+
+            <h1>
+                🙏 Arjuna Youth 🙏
+            </h1>
+
+
+            <span class="hero-tag">
+                ✨ Ganesh Chanda Collection ✨
+            </span>
+
         </div>
 
-        <h1>🙏 Arjuna Youth 🙏</h1>
+    </header>
 
-        <span class="hero-tag">
-            ✨Ganesh Chanda Collection ✨
-        </span>
 
-    </div>
 
-</header>
+    <!-- =========================================
+         DONATION CARD
+    ========================================== -->
 
-<div class="container glass-card">
+    <div class="container glass-card">
 
-    <div class="title-area">
 
-        <h2>Donation Details</h2>
+        <!-- Title -->
 
-    </div>
+        <div class="title-area">
 
-    <form id="donationForm">
+            <h2>
+                Donation Details
+            </h2>
 
-        <!-- Donor Name -->
-        <div class="input-box">
-            <span>👤</span>
-            <input
+        </div>
+
+
+
+        <!-- =====================================
+             DONATION FORM
+        ====================================== -->
+
+        <form id="donationForm">
+
+
+            <!-- =================================
+                 DONOR NAME
+            ================================== -->
+
+            <div class="input-box">
+
+                <span>
+                    👤
+                </span>
+
+                <input
                     type="text"
                     id="name"
+                    name="name"
                     placeholder="Enter Donor Name"
+                    autocomplete="name"
                     required
-            >
-        </div>
+                >
 
-        <!-- Donor Surname -->
-        <div class="input-box">
-            <span>🪷</span>
-            <input
+            </div>
+
+
+
+            <!-- =================================
+                 SURNAME
+            ================================== -->
+
+            <div class="input-box">
+
+                <span>
+                    🪷
+                </span>
+
+                <input
                     type="text"
                     id="surname"
+                    name="surname"
                     placeholder="Enter Surname"
+                    autocomplete="family-name"
                     required
-            >
-        </div>
+                >
 
-        <!-- Mobile -->
-        <div class="input-box">
-            <span>📞</span>
-            <input
+            </div>
+
+
+
+            <!-- =================================
+                 MOBILE
+            ================================== -->
+
+            <div class="input-box">
+
+                <span>
+                    📞
+                </span>
+
+                <input
                     type="tel"
                     id="mobile"
+                    name="mobile"
                     maxlength="10"
+                    inputmode="numeric"
+                    pattern="[0-9]{10}"
                     placeholder="Enter 10-digit Mobile Number"
+                    autocomplete="tel"
                     required
-            >
-        </div>
+                >
 
-        <!-- Address -->
-        <div class="input-box textarea-box">
-            <span>📍</span>
-            <textarea
+            </div>
+
+
+
+            <!-- =================================
+                 WHATSAPP
+            ================================== -->
+
+            <label class="whatsapp-option">
+
+                <input
+                    type="checkbox"
+                    id="whatsapp"
+                    name="whatsapp"
+                >
+
+                <span>
+                    📱 This number is on WhatsApp
+                </span>
+
+            </label>
+
+
+
+            <!-- =================================
+                 ADDRESS
+            ================================== -->
+
+            <div class="input-box textarea-box">
+
+                <span>
+                    📍
+                </span>
+
+                <textarea
                     id="address"
+                    name="address"
                     rows="3"
                     placeholder="Enter your Address"
+                    autocomplete="street-address"
                     required
-            ></textarea>
-        </div>
+                ></textarea>
 
-        <!-- Amount -->
-        <div class="amount-card">
-            <label>Donation Amount</label>
+            </div>
 
-            <div class="amount-input">
-                <span>₹</span>
-                <input
+
+
+            <!-- =================================
+                 DONATION AMOUNT
+            ================================== -->
+
+            <div class="amount-card">
+
+                <label for="amount">
+                    Donation Amount
+                </label>
+
+
+                <div class="amount-input">
+
+                    <span>
+                        ₹
+                    </span>
+
+
+                    <input
                         type="number"
                         id="amount"
+                        name="amount"
+                        min="1"
+                        step="1"
+                        inputmode="decimal"
                         placeholder="Enter Donation Amount"
                         required
-                >
-            </div>
-        </div>
+                    >
 
-        <!-- Payment Selection -->
-
-        <label class="section-title">
-            Select Payment Method
-        </label>
-
-        <div class="payment-selector">
-
-            <label class="payment-card cash-card">
-
-                <input type="radio" name="payment" value="Cash" checked>
-
-                <div>
-                    💵 Cash
                 </div>
-
-            </label>
-
-            <label class="payment-card online-card">
-
-                <input type="radio" name="payment" value="Online">
-
-                <div>
-                    📱 UPI / Razorpay
-                </div>
-
-            </label>
-
-        </div>
-
-        <!-- Online Payment -->
-
-        <div id="onlineSection" class="hidden">
-
-            <div class="online-card-box">
-
-                <h3>Pay Securely with Razorpay</h3>
-
-                <p>
-                    Google Pay • PhonePe • Paytm • BHIM • UPI Apps
-                </p>
-
-                <button type="button" id="upiButton" class="payButton">
-                    💳 Pay Now
-                </button>
 
             </div>
 
-        </div>
 
-        <!-- Cash Submit -->
 
-        <button type="submit" id="cashSubmitBtn" class="submitBtn">
-            Submit Cash Donation
-        </button>
+            <!-- =================================
+                 PAYMENT METHOD
+            ================================== -->
 
-    </form>
+            <label class="section-title">
 
-    <div id="message"></div>
+                Select Payment Method
 
-</div>
+            </label>
 
-<script src="https://checkout.razorpay.com/v1/checkout.js"></script>
 
-<script src="js/supabase.js"></script>
-<script src="js/payment.js"></script>
-<script src="js/app.js"></script>
+            <div class="payment-selector">
+
+
+                <!-- CASH -->
+
+                <label class="payment-card cash-card">
+
+                    <input
+                        type="radio"
+                        name="payment"
+                        value="Cash"
+                        checked
+                    >
+
+
+                    <div>
+                        💵 Cash
+                    </div>
+
+                </label>
+
+
+
+                <!-- ONLINE -->
+
+                <label class="payment-card online-card">
+
+                    <input
+                        type="radio"
+                        name="payment"
+                        value="Online"
+                    >
+
+
+                    <div>
+                        📱 UPI / Razorpay
+                    </div>
+
+                </label>
+
+
+            </div>
+
+
+
+            <!-- =================================
+                 ONLINE PAYMENT
+            ================================== -->
+
+            <div
+                id="onlineSection"
+                class="hidden"
+            >
+
+                <div class="online-card-box">
+
+
+                    <h3>
+                        Pay Securely with Razorpay
+                    </h3>
+
+
+                    <p>
+                        Google Pay • PhonePe • Paytm • BHIM • UPI Apps
+                    </p>
+
+
+                    <button
+                        type="button"
+                        id="upiButton"
+                        class="payButton"
+                    >
+                        💳 Pay Now
+                    </button>
+
+
+                </div>
+
+            </div>
+
+
+
+            <!-- =================================
+                 CASH PAYMENT
+            ================================== -->
+
+            <button
+                type="submit"
+                id="cashSubmitBtn"
+                class="submitBtn"
+            >
+                Submit Cash Donation
+            </button>
+
+
+        </form>
+
+
+
+        <!-- =====================================
+             MESSAGE
+        ====================================== -->
+
+        <div id="message"></div>
+
+
+    </div>
+
+
+
+    <!-- =========================================
+         JAVASCRIPT
+
+         IMPORTANT ORDER:
+
+         1. supabase.js
+         2. payment.js
+         3. app.js
+    ========================================== -->
+
+    <script src="js/supabase.js"></script>
+
+    <script src="js/payment.js"></script>
+
+    <script src="js/app.js"></script>
+
 
 </body>
+
 </html>
