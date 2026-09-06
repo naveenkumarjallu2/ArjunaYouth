@@ -13,9 +13,15 @@ const submitButton =
 
 const upiButton=document.getElementById("upiButton");
 
-upiButton.addEventListener("click",async()=>{
+upiButton.addEventListener("click", () => {
 
-donationForm.requestSubmit();
+    // Validate HTML form first
+    if (!donationForm.reportValidity()) {
+        return;
+    }
+
+    // Trigger the existing submit handler
+    donationForm.requestSubmit();
 
 });
 
